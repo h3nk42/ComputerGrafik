@@ -1,5 +1,6 @@
 #include"Model.h"
 
+
 Model::Model(const char* file)
 {
 	// Make a JSON object
@@ -22,6 +23,21 @@ void Model::Draw(Shader& shader, Camera& camera)
 		meshes[i].Mesh::Draw(shader, camera, matricesMeshes[i]);
 	}
 }
+
+void Model::Move(glm::vec3 direction)
+{	
+
+	glm::mat4 trans = glm::mat4(1.0f);
+
+	trans = glm::translate(trans, direction);
+
+	for (unsigned int i = 0; i < meshes.size(); i++)
+	{
+		matricesMeshes[i] = matricesMeshes[i] * trans;
+	}
+
+}
+
 
 void Model::loadMesh(unsigned int indMesh)
 {

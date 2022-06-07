@@ -15,6 +15,8 @@ public:
 
 	void Draw(Shader& shader, Camera& camera);
 
+	void Move(glm::vec3 direction);
+
 private:
 	// Variables for easy access
 	const char* file;

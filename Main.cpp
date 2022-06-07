@@ -82,6 +82,35 @@ int main()
 
 	// Load in spaceship
 	Model spaceship((homeDir + "/resources/planets/spaceship/scene.gltf").c_str());
+	spaceship.Move(glm::vec3(0.0f, -50.0f, 5.0f));
+
+	Model earth((homeDir + "/resources/planets/earth/scene.gltf").c_str());
+	earth.Move(glm::vec3(10.0f, 0.0f, 0.0f));
+
+	Model mars((homeDir + "/resources/planets/mars/scene.gltf").c_str());
+	mars.Move(glm::vec3(20.0f, 0.0f, 0.0f));
+
+	Model mercury((homeDir + "/resources/planets/mercury/scene.gltf").c_str());
+	mercury.Move(glm::vec3(-10.0f, 0.0f, 0.0f));
+
+	Model moon((homeDir + "/resources/planets/moon/scene.gltf").c_str());
+	moon.Move(glm::vec3(9.0f, 0.0f, 0.0f));
+
+	Model neptune((homeDir + "/resources/planets/neptune/scene.gltf").c_str());
+	neptune.Move(glm::vec3(30.0f, 0.0f, 0.0f));
+
+	Model saturn((homeDir + "/resources/planets/saturn/scene.gltf").c_str());
+	saturn.Move(glm::vec3(-20.0f, 0.0f, 0.0f));
+
+	Model sun((homeDir + "/resources/planets/sun/scene.gltf").c_str()); 
+	sun.Move(glm::vec3(0.0f, 0.0f, 0.0f));
+
+	Model uranus((homeDir + "/resources/planets/uranus/scene.gltf").c_str());
+	uranus.Move(glm::vec3(-30.0f, 0.0f, 0.0f));
+
+	Model venus((homeDir + "/resources/planets/venus/scene.gltf").c_str());
+	venus.Move(glm::vec3(40.0f, 0.0f, 0.0f));
+
 
 
 	std::string facesCubemap[6] =
@@ -143,11 +172,25 @@ int main()
 		// Handles camera inputs (delete this if you have disabled VSync)
 		camera.Inputs(window);
 		// Updates and exports the camera matrix to the Vertex Shader
-		camera.updateMatrix(45.0f, 0.1f, 100.0f);
+		camera.updateMatrix(45.0f, 0.1f, 300.0f);
 
 
 		// Draw the normal model
 		spaceship.Draw(shaderProgram, camera);
+
+		earth.Draw(shaderProgram, camera);
+		mars.Draw(shaderProgram, camera);
+		mercury.Draw(shaderProgram, camera);
+		moon.Draw(shaderProgram, camera);
+		neptune.Draw(shaderProgram, camera);
+		saturn.Draw(shaderProgram, camera);
+		sun.Draw(shaderProgram, camera);
+		uranus.Draw(shaderProgram, camera);
+		venus.Draw(shaderProgram, camera);
+
+		spaceship.Move(glm::vec3(0.0f, 0.02f, 0.0f));
+
+		// Draw the skybox
 		skybox.Draw(width, height, camera, skyboxShader);
 
 		
