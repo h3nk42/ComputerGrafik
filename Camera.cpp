@@ -33,9 +33,7 @@ void Camera::Matrix(Shader& shader, const char* uniform)
 
 
 void Camera::Inputs(GLFWwindow* window)
-{	
-	glm::vec3 prevPos = Position;
-	glm::vec3 prevOri = Orientation;
+{
 	// Handles key inputs
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
 	{
@@ -116,18 +114,5 @@ void Camera::Inputs(GLFWwindow* window)
 		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 		// Makes sure the next time the camera looks around it doesn't jump
 		firstClick = true;
-	}
-	glm::vec3 posNow = Position;
-	glm::vec3 oriNow = Orientation;
-
-
-	if (prevPos != posNow) {
-		std::cout << "Position: x:" << Position.x << "  , y: " << Position.y << "  , z: " << Position.z << std::endl;
-		std::cout << " " << std::endl;
-	}
-	if (prevOri != oriNow) {
-		std::cout << "Orientation: " << Orientation.x << "  , " << Orientation.y << "  , " << Orientation.z << std::endl;
-		std::cout << " ----------------- " << std::endl;
-
 	}
 }
