@@ -83,6 +83,9 @@ int main()
 	// Load in spaceship
 	Model spaceship((homeDir + "/resources/planets/spaceship/scene.gltf").c_str());
 	spaceship.Move(glm::vec3(0.0f, -50.0f, 5.0f));
+	Model flame((homeDir + "/resources/planets/flame/scene.gltf").c_str());
+	flame.Move(glm::vec3(-51.0f, 2.0f, -5.0f));
+
 
 	Model earth((homeDir + "/resources/planets/earth/scene.gltf").c_str());
 	earth.Move(glm::vec3(10.0f, 0.0f, 0.0f));
@@ -174,9 +177,12 @@ int main()
 		// Updates and exports the camera matrix to the Vertex Shader
 		camera.updateMatrix(45.0f, 0.1f, 300.0f);
 
+		spaceship.Move(glm::vec3(0.0f, 0.02f, 0.0f));
+		flame.Move(glm::vec3(0.02f, 0.00f, 0.0f));
 
 		// Draw the normal model
 		spaceship.Draw(shaderProgram, camera);
+		flame.Draw(shaderProgram, camera);
 
 		earth.Draw(shaderProgram, camera);
 		mars.Draw(shaderProgram, camera);
@@ -188,7 +194,7 @@ int main()
 		uranus.Draw(shaderProgram, camera);
 		venus.Draw(shaderProgram, camera);
 
-		spaceship.Move(glm::vec3(0.0f, 0.02f, 0.0f));
+	
 
 		// Draw the skybox
 		skybox.Draw(width, height, camera, skyboxShader);
