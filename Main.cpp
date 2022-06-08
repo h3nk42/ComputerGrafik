@@ -80,13 +80,13 @@ int main()
 	glFrontFace(GL_CCW);
 
 	// Creates camera object
-	Camera camera(width, height, glm::vec3(0.0f, 0.0f, 50.0f));
+	Camera camera(width, height, glm::vec3(-5.506314f, 2.163434f, 0.769911f));
 
 
 
 	// Load in spaceship
 	Model spaceship((homeDir + "/resources/spaceship/scene.gltf").c_str());
-	spaceship.Move(glm::vec3(0.0f, -50.0f, 5.0f));
+	spaceship.Move(glm::vec3(0.0f,0.0f,0.0f));
 	Model flame((homeDir + "/resources/flame/scene.gltf").c_str());
 	flame.Move(glm::vec3(-51.0f, 0.0f, -5.0f));
 	//flame.Rotate(-45.0f, glm::vec3(0.0f, 1.0f, 0.0f));
@@ -163,7 +163,7 @@ int main()
 	//glfwSwapInterval(0);
 
 
-
+	glm::vec3 prevCameraPosition = camera.Position;
 
 
 	// Main while loop
@@ -200,8 +200,18 @@ int main()
 		// Updates and exports the camera matrix to the Vertex Shader
 		camera.updateMatrix(45.0f, 0.1f, 1000.0f);
 
-		spaceship.Move(glm::vec3(0.0f, 0.02f, 0.0f));
-		flame.Move(glm::vec3(0.02f, 0.00f, 0.0f));
+
+		glm::vec3 nowCameraPosition = camera.Position;
+		if (nowCameraPosition != prevCameraPosition) {
+			//spaceship.Move(  prevCameraPosition - nowCameraPosition );
+
+			//std::cout << std::to_string(nowCameraPosition.x)  + ", "  + std::to_string(nowCameraPosition.y) + ", " + std::to_string(nowCameraPosition.z) << std::endl;
+		}
+		prevCameraPosition = nowCameraPosition;
+
+
+
+
 
 		// Draw the normal model
 		spaceship.Draw(shaderProgram, camera);
@@ -221,7 +231,7 @@ int main()
 		moon.Rotate(0.01f, glm::vec3(0.0f, 0.5f, 0.5f));
 
 		mars.Draw(shaderProgram, camera);
-		jupiter.Rotate(0.01f, glm::vec3(0.0f, 0.5f, 0.5f));
+		mars.Rotate(0.01f, glm::vec3(0.0f, 0.5f, 0.5f));
 
 
 		jupiter.Draw(shaderProgram, camera);
