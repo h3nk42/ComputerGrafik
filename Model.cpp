@@ -66,8 +66,6 @@ void Model::Scale(float scaleValue) {
 }
 
 
-
-
 void Model::loadMesh(unsigned int indMesh)
 {
 	// Get all accessor indices

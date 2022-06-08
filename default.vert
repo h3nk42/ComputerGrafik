@@ -32,10 +32,22 @@ uniform mat4 scale;
 
 void main()
 {
+
+	
+
 	// calculates current position
 	crntPos = vec3(model * translation * rotation * scale * vec4(aPos, 1.0f));
 	// Assigns the normal from the Vertex Data to "Normal"
-	Normal = aNormal;
+	
+	// recalculate normals for the rotation
+	 mat3 modelForNormal = mat3(model);
+	 modelForNormal = inverse(modelForNormal);
+	 modelForNormal = transpose(modelForNormal);
+
+	Normal = modelForNormal * aNormal;
+
+
+
 	// Assigns the colors from the Vertex Data to "color"
 	color = aColor;
 	// Assigns the texture coordinates from the Vertex Data to "texCoord"

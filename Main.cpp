@@ -53,12 +53,16 @@ int main()
 	// Generates Shader objects
 	Shader shaderProgram("default.vert", "default.frag");
 	Shader skyboxShader("skybox.vert", "skybox.frag");
+	Shader sunShader("default.vert", "sun.frag");
 
 	// Take care of all the light related things
 	glm::vec4 lightColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
-	glm::vec3 lightPos = glm::vec3(0.0f, 0.0f, 0.0f);
+	glm::vec3 lightPos = glm::vec3(10.0f, 0.0f, 0.0f);
 
 	shaderProgram.Activate();
+	glUniform4f(glGetUniformLocation(shaderProgram.ID, "lightColor"), lightColor.x, lightColor.y, lightColor.z, lightColor.w);
+	glUniform3f(glGetUniformLocation(shaderProgram.ID, "lightPos"), lightPos.x, lightPos.y, lightPos.z);
+	sunShader.Activate();
 	glUniform4f(glGetUniformLocation(shaderProgram.ID, "lightColor"), lightColor.x, lightColor.y, lightColor.z, lightColor.w);
 	glUniform3f(glGetUniformLocation(shaderProgram.ID, "lightPos"), lightPos.x, lightPos.y, lightPos.z);
 	skyboxShader.Activate();
@@ -106,26 +110,24 @@ int main()
 	earth.Scale(0.091f);
 
 	Model moon((homeDir + "/resources/planets/moon/scene.gltf").c_str());
-	moon.Move(glm::vec3(10.0f + 0.091f + 10.7275f, 0.0f, 0.0f));
+	moon.Move(glm::vec3(10.0f  + 10.7275f, 0.1f, 0.0f));
 	moon.Scale(0.025f);
 
 	Model mars((homeDir + "/resources/planets/mars/scene.gltf").c_str());
 	mars.Move(glm::vec3(10.0f + 16.30f, 0.0f, 0.0f));
 	mars.Scale(0.049f);
 
+	Model jupiter((homeDir + "/resources/planets/jupiter/scene.gltf").c_str());
+	jupiter.Move(glm::vec3(10.0f + 55.60f, 0.0f, 0.0f));
+	jupiter.Scale(1.02f);
+
 	Model saturn((homeDir + "/resources/planets/saturn/scene.gltf").c_str());
 	saturn.Move(glm::vec3(10.0f + 101.90f, 0.0f, 0.0f));
 	saturn.Scale(0.86f);
-	saturn.Rotate(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
-	saturn.Rotate(45.0f, glm::vec3(1.0f, 0.0f, 0.0f));
-	
-	
 
 	Model uranus((homeDir + "/resources/planets/uranus/scene.gltf").c_str());
 	uranus.Move(glm::vec3(205.10f, 0.0f, 0.0f));
 	uranus.Scale(0.37f);
-	uranus.Rotate(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
-	uranus.Rotate(45.0f, glm::vec3(1.0f, 0.0f, 0.0f));
 	
 	Model neptune((homeDir + "/resources/planets/neptune/scene.gltf").c_str());
 	neptune.Move(glm::vec3(321.30f, 0.0f, 0.0f));
@@ -205,15 +207,37 @@ int main()
 		spaceship.Draw(shaderProgram, camera);
 		flame.Draw(shaderProgram, camera);
 
-		earth.Draw(shaderProgram, camera);
-		mars.Draw(shaderProgram, camera);
+		sun.Draw(sunShader, camera);
+		sun.Rotate(0.0005f, glm::vec3(0.0f, 0.5f, 0.5f));
+
 		mercury.Draw(shaderProgram, camera);
+		mercury.Rotate(0.01f, glm::vec3(0.0f, 0.5f, 0.5f));
+
+
+		earth.Draw(shaderProgram, camera);
+		earth.Rotate(0.01f, glm::vec3(0.0f, 0.5f, 0.5f));
+
 		moon.Draw(shaderProgram, camera);
-		neptune.Draw(shaderProgram, camera);
+		moon.Rotate(0.01f, glm::vec3(0.0f, 0.5f, 0.5f));
+
+		mars.Draw(shaderProgram, camera);
+		jupiter.Rotate(0.01f, glm::vec3(0.0f, 0.5f, 0.5f));
+
+
+		jupiter.Draw(shaderProgram, camera);
+		jupiter.Rotate(0.01f, glm::vec3(0.0f, 0.5f, 0.5f));
+
 		saturn.Draw(shaderProgram, camera);
-		sun.Draw(shaderProgram, camera);
+		saturn.Rotate(0.01f, glm::vec3(0.0f, 0.5f, 0.5f));
+
 		uranus.Draw(shaderProgram, camera);
+		uranus.Rotate(0.01f, glm::vec3(0.0f, 0.5f, 0.5f));
+
 		venus.Draw(shaderProgram, camera);
+		venus.Rotate(0.01f, glm::vec3(0.0f, 0.5f, 0.5f));
+
+		neptune.Draw(shaderProgram, camera);
+		neptune.Rotate(0.01f, glm::vec3(0.0f, 0.5f, 0.5f));
 
 	
 
@@ -232,6 +256,7 @@ int main()
 	// Delete all the objects we've created
 	shaderProgram.Delete();
 	skyboxShader.Delete();
+	sunShader.Delete();
 	// Delete window before ending the program
 	glfwDestroyWindow(window);
 	// Terminate GLFW before ending the program

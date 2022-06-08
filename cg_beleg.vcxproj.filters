@@ -97,5 +97,8 @@
     <None Include="skybox.frag">
       <Filter>Resource Files\Shaders</Filter>
     </None>
+    <None Include="sun.frag">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>
