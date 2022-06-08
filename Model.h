@@ -17,6 +17,12 @@ public:
 
 	void Move(glm::vec3 direction);
 
+	void Rotate(float angle, glm::vec3 direction);
+
+	void Scale(float scaleValue);
+
+
+
 private:
 	// Variables for easy access
 	const char* file;

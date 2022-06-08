@@ -38,6 +38,35 @@ void Model::Move(glm::vec3 direction)
 
 }
 
+void Model::Rotate(float angle, glm::vec3 direction) {
+
+	glm::mat4 rot = glm::mat4(1.0f);
+
+	rot = glm::rotate(rot, angle, direction);
+
+	for (unsigned int i = 0; i < meshes.size(); i++)
+	{
+		matricesMeshes[i] = matricesMeshes[i] * rot;
+	}
+
+}
+
+void Model::Scale(float scaleValue) {
+
+	glm::vec3 scale = glm::vec3(1.0f, 1.0f, 1.0f) * scaleValue;
+
+	glm::mat4 sca = glm::mat4(1.0f);
+
+	sca = glm::scale(sca, scale);
+
+	for (unsigned int i = 0; i < meshes.size(); i++)
+	{
+		matricesMeshes[i] = matricesMeshes[i] * sca;
+	}
+}
+
+
+
 
 void Model::loadMesh(unsigned int indMesh)
 {

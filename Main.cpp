@@ -56,7 +56,7 @@ int main()
 
 	// Take care of all the light related things
 	glm::vec4 lightColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
-	glm::vec3 lightPos = glm::vec3(0.5f, 0.5f, 0.5f);
+	glm::vec3 lightPos = glm::vec3(0.0f, 0.0f, 0.0f);
 
 	shaderProgram.Activate();
 	glUniform4f(glGetUniformLocation(shaderProgram.ID, "lightColor"), lightColor.x, lightColor.y, lightColor.z, lightColor.w);
@@ -81,49 +81,70 @@ int main()
 
 
 	// Load in spaceship
-	Model spaceship((homeDir + "/resources/planets/spaceship/scene.gltf").c_str());
+	Model spaceship((homeDir + "/resources/spaceship/scene.gltf").c_str());
 	spaceship.Move(glm::vec3(0.0f, -50.0f, 5.0f));
-	Model flame((homeDir + "/resources/planets/flame/scene.gltf").c_str());
-	flame.Move(glm::vec3(-51.0f, 2.0f, -5.0f));
+	Model flame((homeDir + "/resources/flame/scene.gltf").c_str());
+	flame.Move(glm::vec3(-51.0f, 0.0f, -5.0f));
+	//flame.Rotate(-45.0f, glm::vec3(0.0f, 1.0f, 0.0f));
 
 
-	Model earth((homeDir + "/resources/planets/earth/scene.gltf").c_str());
-	earth.Move(glm::vec3(10.0f, 0.0f, 0.0f));
 
-	Model mars((homeDir + "/resources/planets/mars/scene.gltf").c_str());
-	mars.Move(glm::vec3(20.0f, 0.0f, 0.0f));
+	Model sun((homeDir + "/resources/planets/sun/scene.gltf").c_str());
+	sun.Move(glm::vec3(0.0f, 0.0f, 0.0f));
+	sun.Scale(10.0f);
 
 	Model mercury((homeDir + "/resources/planets/mercury/scene.gltf").c_str());
-	mercury.Move(glm::vec3(-10.0f, 0.0f, 0.0f));
-
-	Model moon((homeDir + "/resources/planets/moon/scene.gltf").c_str());
-	moon.Move(glm::vec3(9.0f, 0.0f, 0.0f));
-
-	Model neptune((homeDir + "/resources/planets/neptune/scene.gltf").c_str());
-	neptune.Move(glm::vec3(30.0f, 0.0f, 0.0f));
-
-	Model saturn((homeDir + "/resources/planets/saturn/scene.gltf").c_str());
-	saturn.Move(glm::vec3(-20.0f, 0.0f, 0.0f));
-
-	Model sun((homeDir + "/resources/planets/sun/scene.gltf").c_str()); 
-	sun.Move(glm::vec3(0.0f, 0.0f, 0.0f));
-
-	Model uranus((homeDir + "/resources/planets/uranus/scene.gltf").c_str());
-	uranus.Move(glm::vec3(-30.0f, 0.0f, 0.0f));
+	mercury.Move(glm::vec3( 10.0f + 4.10f, 0.0f, 0.0f));
+	mercury.Scale(0.035f);
 
 	Model venus((homeDir + "/resources/planets/venus/scene.gltf").c_str());
-	venus.Move(glm::vec3(40.0f, 0.0f, 0.0f));
+	venus.Move(glm::vec3(10.0f + 7.70f, 0.0f, 0.0f));
+	venus.Scale(0.086f);
+
+	Model earth((homeDir + "/resources/planets/earth/scene.gltf").c_str());
+	earth.Move(glm::vec3(10.0f + 10.70f, 0.0f, 0.0f));
+	earth.Scale(0.091f);
+
+	Model moon((homeDir + "/resources/planets/moon/scene.gltf").c_str());
+	moon.Move(glm::vec3(10.0f + 0.091f + 10.7275f, 0.0f, 0.0f));
+	moon.Scale(0.025f);
+
+	Model mars((homeDir + "/resources/planets/mars/scene.gltf").c_str());
+	mars.Move(glm::vec3(10.0f + 16.30f, 0.0f, 0.0f));
+	mars.Scale(0.049f);
+
+	Model saturn((homeDir + "/resources/planets/saturn/scene.gltf").c_str());
+	saturn.Move(glm::vec3(10.0f + 101.90f, 0.0f, 0.0f));
+	saturn.Scale(0.86f);
+	saturn.Rotate(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+	saturn.Rotate(45.0f, glm::vec3(1.0f, 0.0f, 0.0f));
+	
+	
+
+	Model uranus((homeDir + "/resources/planets/uranus/scene.gltf").c_str());
+	uranus.Move(glm::vec3(205.10f, 0.0f, 0.0f));
+	uranus.Scale(0.37f);
+	uranus.Rotate(90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+	uranus.Rotate(45.0f, glm::vec3(1.0f, 0.0f, 0.0f));
+	
+	Model neptune((homeDir + "/resources/planets/neptune/scene.gltf").c_str());
+	neptune.Move(glm::vec3(321.30f, 0.0f, 0.0f));
+	neptune.Scale(0.35f);
+
+
+
+	
 
 
 
 	std::string facesCubemap[6] =
 	{
-		homeDir + "/resources/skybox3/right.jpg",
-		homeDir + "/resources/skybox3/left.jpg",
-		homeDir + "/resources/skybox3/top.jpg",
-		homeDir + "/resources/skybox3/bottom.jpg",
-		homeDir + "/resources/skybox3/front.jpg",
-		homeDir + "/resources/skybox3/back.jpg"
+		homeDir + "/resources/skybox2/right.jpg",
+		homeDir + "/resources/skybox2/left.jpg",
+		homeDir + "/resources/skybox2/top.jpg",
+		homeDir + "/resources/skybox2/bottom.jpg",
+		homeDir + "/resources/skybox2/front.jpg",
+		homeDir + "/resources/skybox2/back.jpg"
 	};
 
 	Skybox skybox(facesCubemap);
@@ -175,7 +196,7 @@ int main()
 		// Handles camera inputs (delete this if you have disabled VSync)
 		camera.Inputs(window);
 		// Updates and exports the camera matrix to the Vertex Shader
-		camera.updateMatrix(45.0f, 0.1f, 300.0f);
+		camera.updateMatrix(45.0f, 0.1f, 1000.0f);
 
 		spaceship.Move(glm::vec3(0.0f, 0.02f, 0.0f));
 		flame.Move(glm::vec3(0.02f, 0.00f, 0.0f));
