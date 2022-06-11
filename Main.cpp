@@ -88,7 +88,7 @@ int main()
 	Model spaceship((homeDir + "/resources/spaceship/scene.gltf").c_str());
 	spaceship.Move(glm::vec3(0.0f,0.0f,0.0f));
 	Model flame((homeDir + "/resources/flame/scene.gltf").c_str());
-	flame.Move(glm::vec3(-51.0f, 0.0f, -5.0f));
+	flame.Move(glm::vec3(0.0f, 0.0f, 0.0f));
 	//flame.Rotate(-45.0f, glm::vec3(0.0f, 1.0f, 0.0f));
 
 
@@ -203,12 +203,13 @@ int main()
 
 		glm::vec3 nowCameraPosition = camera.Position;
 		if (nowCameraPosition != prevCameraPosition) {
-			//spaceship.Move(  prevCameraPosition - nowCameraPosition );
+			flame.Move(  glm::vec3(0, -0.01f, 0));
 
 			//std::cout << std::to_string(nowCameraPosition.x)  + ", "  + std::to_string(nowCameraPosition.y) + ", " + std::to_string(nowCameraPosition.z) << std::endl;
 		}
 		prevCameraPosition = nowCameraPosition;
 
+		//earth.Move(glm::vec3(0, 0.1f, 0));
 
 
 

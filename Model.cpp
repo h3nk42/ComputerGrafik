@@ -20,48 +20,35 @@ void Model::Draw(Shader& shader, Camera& camera)
 	// Go over all meshes and draw each one
 	for (unsigned int i = 0; i < meshes.size(); i++)
 	{
-		meshes[i].Mesh::Draw(shader, camera, matricesMeshes[i]);
+		meshes[i].Mesh::Draw(shader, camera, matricesMeshes[i], translationsMeshes[i], rotationsMeshes[i], scalesMeshes[i]);
 	}
 }
 
 void Model::Move(glm::vec3 direction)
 {	
-
-	glm::mat4 trans = glm::mat4(1.0f);
-
-	trans = glm::translate(trans, direction);
-
 	for (unsigned int i = 0; i < meshes.size(); i++)
-	{
-		matricesMeshes[i] = matricesMeshes[i] * trans;
+	{	
+		translationsMeshes[i] = translationsMeshes[i] + direction;
 	}
 
 }
 
 void Model::Rotate(float angle, glm::vec3 direction) {
 
-	glm::mat4 rot = glm::mat4(1.0f);
-
-	rot = glm::rotate(rot, angle, direction);
+	glm::quat rot = glm::angleAxis(angle, direction);
 
 	for (unsigned int i = 0; i < meshes.size(); i++)
-	{
-		matricesMeshes[i] = matricesMeshes[i] * rot;
+	{	
+		rotationsMeshes[i] = rotationsMeshes[i] * rot;
 	}
 
 }
 
 void Model::Scale(float scaleValue) {
 
-	glm::vec3 scale = glm::vec3(1.0f, 1.0f, 1.0f) * scaleValue;
-
-	glm::mat4 sca = glm::mat4(1.0f);
-
-	sca = glm::scale(sca, scale);
-
 	for (unsigned int i = 0; i < meshes.size(); i++)
 	{
-		matricesMeshes[i] = matricesMeshes[i] * sca;
+		scalesMeshes[i] = scalesMeshes[i] * scaleValue;
 	}
 }
 

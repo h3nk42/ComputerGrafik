@@ -40,11 +40,9 @@ void main()
 	// Assigns the normal from the Vertex Data to "Normal"
 	
 	// recalculate normals for the rotation
-	 mat3 modelForNormal = mat3(model);
-	 modelForNormal = inverse(modelForNormal);
-	 modelForNormal = transpose(modelForNormal);
+	mat3 rotationMat3 = mat3(rotation);
 
-	Normal = modelForNormal * aNormal;
+	Normal = rotationMat3 * aNormal;
 
 
 
