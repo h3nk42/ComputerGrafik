@@ -32,7 +32,7 @@ public:
 	float sensitivity = 100.0f;
 
 	// Camera constructor to set up initial values
-	Camera(int width, int height, glm::vec3 position);
+	Camera(int width, int height, glm::vec3 position );
 
 	// Updates the camera matrix to the Vertex Shader
 	void updateMatrix(float FOVdeg, float nearPlane, float farPlane);
@@ -40,5 +40,14 @@ public:
 	void Matrix(Shader& shader, const char* uniform);
 	// Handles camera inputs
 	void Inputs(GLFWwindow* window);
+
+	void setPosition(glm::vec3 newPosition);
+
+	void setOrientation(glm::vec3 newOrientation);
+
+	glm::vec3 CameraBehindShipVector = glm::vec3(0, 0.01f, 0.1f);
+
+	Camera() = default;
+
 };
 #endif

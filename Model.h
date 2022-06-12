@@ -16,12 +16,14 @@ public:
 	void Draw(Shader& shader, Camera& camera);
 
 	void Move(glm::vec3 direction);
+	void MoveToPoint(glm::vec3 point);
 
-	void Rotate(float angle, glm::vec3 direction);
+	void RotateByAngle(float angle, glm::vec3 axis);
+	void ResetRotation();
 
 	void Scale(float scaleValue);
 
-
+	Model() = default;
 
 private:
 	// Variables for easy access

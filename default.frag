@@ -30,7 +30,7 @@ uniform vec3 camPos;
 vec4 direcLight()
 {
 	// ambient lighting
-	float ambient = 0.30f;
+	float ambient = 0.10f;
 
 
 	

@@ -15,13 +15,7 @@
     "nodes" : [
         {
             "mesh" : 0,
-            "name" : "nave futurama_Material #4_0",
-            "rotation" : [
-                0.6865876913070679,
-                0,
-                0,
-                0.7270469665527344
-            ]
+            "name" : "nave futurama_Material #4_0"
         }
     ],
     "materials" : [

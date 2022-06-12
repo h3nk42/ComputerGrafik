@@ -41,7 +41,6 @@ void main()
 	
 	// recalculate normals for the rotation
 	mat3 rotationMat3 = mat3(rotation);
-
 	Normal = rotationMat3 * aNormal;
 
 

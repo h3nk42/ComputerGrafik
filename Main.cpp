@@ -5,6 +5,7 @@ namespace fs = std::filesystem;
 
 #include"Model.h"
 #include"Skybox.h"
+#include"Spaceship.h"
 
 //define size of window
 const unsigned int width = 1920;
@@ -82,16 +83,14 @@ int main()
 	// Creates camera object
 	Camera camera(width, height, glm::vec3(-5.506314f, 2.163434f, 0.769911f));
 
+	Spaceship spaceship(glm::vec3(0, 0, 0), (homeDir + "/resources/spaceship/scene.gltf").c_str(), width, height, &camera);
 
 
-	// Load in spaceship
-	Model spaceship((homeDir + "/resources/spaceship/scene.gltf").c_str());
-	spaceship.Move(glm::vec3(0.0f,0.0f,0.0f));
+
+
+	
 	Model flame((homeDir + "/resources/flame/scene.gltf").c_str());
-	flame.Move(glm::vec3(0.0f, 0.0f, 0.0f));
-	//flame.Rotate(-45.0f, glm::vec3(0.0f, 1.0f, 0.0f));
-
-
+	glm::vec3 spaceShipFlameDifference = glm::vec3(0.0f, -0.02f, -0.1f);
 
 	Model sun((homeDir + "/resources/planets/sun/scene.gltf").c_str());
 	sun.Move(glm::vec3(0.0f, 0.0f, 0.0f));
@@ -134,11 +133,6 @@ int main()
 	neptune.Scale(0.35f);
 
 
-
-	
-
-
-
 	std::string facesCubemap[6] =
 	{
 		homeDir + "/resources/skybox2/right.jpg",
@@ -169,6 +163,8 @@ int main()
 	// Main while loop
 	while (!glfwWindowShouldClose(window))
 	{
+
+
 		// Updates counter and times
 		crntTime = glfwGetTime();
 		timeDiff = crntTime - prevTime;
@@ -197,59 +193,50 @@ int main()
 
 		// Handles camera inputs (delete this if you have disabled VSync)
 		camera.Inputs(window);
+		spaceship.Inputs(window);
+		spaceship.executeMovement();
+		camera.setPosition(spaceship.Position);
+
+
+
 		// Updates and exports the camera matrix to the Vertex Shader
-		camera.updateMatrix(45.0f, 0.1f, 1000.0f);
-
-
-		glm::vec3 nowCameraPosition = camera.Position;
-		if (nowCameraPosition != prevCameraPosition) {
-			flame.Move(  glm::vec3(0, -0.01f, 0));
-
-			//std::cout << std::to_string(nowCameraPosition.x)  + ", "  + std::to_string(nowCameraPosition.y) + ", " + std::to_string(nowCameraPosition.z) << std::endl;
-		}
-		prevCameraPosition = nowCameraPosition;
-
-		//earth.Move(glm::vec3(0, 0.1f, 0));
-
+		camera.updateMatrix(45.0f, 0.05f, 1000.0f);
 
 
 
 		// Draw the normal model
-		spaceship.Draw(shaderProgram, camera);
+		spaceship.model.Draw(shaderProgram, camera);
 		flame.Draw(shaderProgram, camera);
 
 		sun.Draw(sunShader, camera);
-		sun.Rotate(0.0005f, glm::vec3(0.0f, 0.5f, 0.5f));
+		sun.RotateByAngle(0.0005f, glm::vec3(0.0f, 0.5f, 0.5f));
 
 		mercury.Draw(shaderProgram, camera);
-		mercury.Rotate(0.01f, glm::vec3(0.0f, 0.5f, 0.5f));
-
+		mercury.RotateByAngle(0.01f, glm::vec3(0.0f, 0.5f, 0.5f));
 
 		earth.Draw(shaderProgram, camera);
-		earth.Rotate(0.01f, glm::vec3(0.0f, 0.5f, 0.5f));
+		earth.RotateByAngle(0.01f, glm::vec3(0.0f, 0.5f, 0.5f));
 
 		moon.Draw(shaderProgram, camera);
-		moon.Rotate(0.01f, glm::vec3(0.0f, 0.5f, 0.5f));
+		moon.RotateByAngle(0.01f, glm::vec3(0.0f, 0.5f, 0.5f));
 
 		mars.Draw(shaderProgram, camera);
-		mars.Rotate(0.01f, glm::vec3(0.0f, 0.5f, 0.5f));
-
+		mars.RotateByAngle(0.01f, glm::vec3(0.0f, 0.5f, 0.5f));
 
 		jupiter.Draw(shaderProgram, camera);
-		jupiter.Rotate(0.01f, glm::vec3(0.0f, 0.5f, 0.5f));
+		jupiter.RotateByAngle(0.1f, glm::vec3(0.0f, 0.5f, 0.5f));
 
 		saturn.Draw(shaderProgram, camera);
-		saturn.Rotate(0.01f, glm::vec3(0.0f, 0.5f, 0.5f));
+		saturn.RotateByAngle(0.01f, glm::vec3(0.0f, 0.5f, 0.5f));
 
 		uranus.Draw(shaderProgram, camera);
-		uranus.Rotate(0.01f, glm::vec3(0.0f, 0.5f, 0.5f));
+		uranus.RotateByAngle(0.01f, glm::vec3(0.0f, 0.5f, 0.5f));
 
 		venus.Draw(shaderProgram, camera);
-		venus.Rotate(0.01f, glm::vec3(0.0f, 0.5f, 0.5f));
+		venus.RotateByAngle(0.01f, glm::vec3(0.0f, 0.5f, 0.5f));
 
 		neptune.Draw(shaderProgram, camera);
-		neptune.Rotate(0.01f, glm::vec3(0.0f, 0.5f, 0.5f));
-
+		neptune.RotateByAngle(0.01f, glm::vec3(0.0f, 0.5f, 0.5f));
 	
 
 		// Draw the skybox

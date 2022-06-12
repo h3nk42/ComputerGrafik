@@ -33,9 +33,17 @@ void Model::Move(glm::vec3 direction)
 
 }
 
-void Model::Rotate(float angle, glm::vec3 direction) {
+void Model::MoveToPoint(glm::vec3 point) {
 
-	glm::quat rot = glm::angleAxis(angle, direction);
+	for (unsigned int i = 0; i < meshes.size(); i++)
+	{
+		translationsMeshes[i] =point;
+	}
+}
+
+void Model::RotateByAngle(float angle, glm::vec3 axis) {
+
+	glm::quat rot = glm::angleAxis(glm::radians(angle), axis);
 
 	for (unsigned int i = 0; i < meshes.size(); i++)
 	{	
@@ -43,6 +51,18 @@ void Model::Rotate(float angle, glm::vec3 direction) {
 	}
 
 }
+
+void Model::ResetRotation() {
+
+	glm::quat rot = glm::angleAxis(glm::radians(0.0f), glm::vec3(1,0,0));
+
+	for (unsigned int i = 0; i < meshes.size(); i++)
+	{
+		rotationsMeshes[i] = rot;
+	}
+
+}
+
 
 void Model::Scale(float scaleValue) {
 
