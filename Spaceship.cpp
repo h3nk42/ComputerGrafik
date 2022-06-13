@@ -24,7 +24,7 @@ Spaceship::Spaceship(glm::vec3 position, const char* filePath, int _width, int _
 }
 
 void Spaceship::executeMovement() {
-	Position += speed * velocity * Orientation;
+	Position += speed * velocity * 1.3f * Orientation;
 	model.MoveToPoint(Position);
 }
 
@@ -32,6 +32,8 @@ void Spaceship::executeMovement() {
 void Spaceship::Inputs(GLFWwindow* window)
 {
 	// Handles key inputs
+
+	// apply debounce to velocity change
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
 	{
 		crntVelocityChangedTime = glfwGetTime();
@@ -44,22 +46,8 @@ void Spaceship::Inputs(GLFWwindow* window)
 			flame->setSize(velocity);
 		}
 	}
-	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-	{
-		model.RotateByAngle(1.0f,glm::vec3(1,0,0));
-	}
-	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-	{
-		model.RotateByAngle(-1.0f,glm::vec3(1,0,0));
-	}
-	if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
-	{
-		model.RotateByAngle(1.0f, glm::vec3(0, 1, 0));
-	}
-	if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
-	{
-		model.RotateByAngle(-1.0f, glm::vec3(0, 1, 0));
-	}
+
+	// apply debounce to velocity change
 	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
 	{
 		crntVelocityChangedTime = glfwGetTime();
@@ -99,30 +87,29 @@ void Spaceship::Inputs(GLFWwindow* window)
 
 
 		// Calculates upcoming vertical change in the Orientation
-		
 		glm::vec3 newOrientationVertical = glm::rotate(Orientation, glm::radians(rotX), glm::normalize(glm::cross(Orientation, Up)));
 
+		// Cutoff vertical rotation at 45 degrees
 		if (abs(glm::angle(newOrientationVertical, Up) - glm::radians(90.0f)) <= glm::radians(45.0f))
 		{
 			Orientation = newOrientationVertical;
 		}
 
-
+		// Calculates upcoming horizontal change in the Orientation
 		glm::vec3 newOrientationHorizontal = glm::rotate(Orientation, glm::radians(rotY), Up);
 
+		// update the orientation
 		Orientation = newOrientationHorizontal;
+		// send orientation to camera and flame so they can rotate / position accordingly
 		(*camera).setOrientation(Orientation);
 		(*flame).setOrientation(Orientation);
 
-		glm::vec3 rotationAxis = glm::normalize(glm::cross(OriginalOrientation, Orientation));
-
-		
-		float angle = glm::orientedAngle(glm::normalize(OriginalOrientation), glm::normalize(Orientation), rotationAxis);
-		std::cout << glm::degrees(angle) << std::endl;
 
 		// Spaceship rotation
-		model.setRotation(glm::angleAxis(angle, rotationAxis));
+		glm::vec3 rotationAxis = glm::normalize(glm::cross(OriginalOrientation, Orientation));
+		float angle = glm::orientedAngle(glm::normalize(OriginalOrientation), glm::normalize(Orientation), rotationAxis);
 
+		model.setRotation(glm::angleAxis(angle, rotationAxis));
 		model.RotateByAngle(float(-90.0f), glm::vec3(1, 0, 0));
 		model.RotateByAngle(float(-90.0f), glm::vec3(0, 1, 0));
 		model.RotateByAngle(float(-5.0f), glm::vec3(0, 0, 1));

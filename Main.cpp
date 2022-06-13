@@ -12,8 +12,54 @@ namespace fs = std::filesystem;
 const unsigned int width = 1920;
 const unsigned int height = 1080;
 
+glm::vec3 spaceshipPosition = glm::vec3(20.0f, 0.f, 10.f);
+
+
 // get the current path for relative imports
 std::string homeDir = fs::current_path().string();
+
+
+std::vector<std::string> planetNames = { "mercury", "venus", "earth", "mars", "jupiter", "saturn", "uranus", "neptune"};
+
+glm::vec3 SunPosition = glm::vec3(0.0f, 0.0f, 0.0f);
+float SunScale = 10.0f;
+
+glm::vec3 MercuyPosition = glm::vec3(10.0f + 4.10f, 0.0f, 0.0f);
+float MercuryScale = 0.035f;
+
+glm::vec3 VenusPosition = glm::vec3(10.0f + 7.70f, 0.0f, 0.0f);
+float VenusScale = 0.086f;
+
+glm::vec3 EarthPosition = glm::vec3(10.0f + 10.70f, 0.0f, 0.0f);
+float EarthScale = 0.091f;
+
+
+glm::vec3 MoonPosition = glm::vec3(10.0f + 10.7275f, 0.1f, 0.0f);
+float MoonScale = 0.025f;
+
+glm::vec3 MarsPosition = glm::vec3(10.0f + 16.30f, 0.0f, 0.0f);
+float MarsScale = 0.049f;
+
+
+glm::vec3 JupiterPosition = glm::vec3(10.0f + 55.60f, 0.0f, 0.0f);
+float JupiterScale = 1.02f;
+
+
+glm::vec3 SaturnPosition = glm::vec3(10.0f + 101.90f, 0.0f, 0.0f);
+float SaturnScale = 0.86f;
+
+
+glm::vec3 UranusPosition = glm::vec3(205.10f, 0.0f, 0.0f);
+float UranusScale = 0.37f;
+
+
+glm::vec3 NeptunePosition = glm::vec3(321.30f, 0.0f, 0.0f);
+float NeptuneScale = 0.35f;
+
+
+std::vector <glm::vec3> planetPositions = { MercuyPosition,VenusPosition,EarthPosition,MarsPosition, JupiterPosition, SaturnPosition, UranusPosition, NeptunePosition };
+std::vector <float> planetScales = { MercuryScale,VenusScale,EarthScale,MarsScale, JupiterScale, SaturnScale, UranusScale, NeptuneScale };
+uint8_t activePlanetIndex = 0;
 
 
 
@@ -31,7 +77,7 @@ int main()
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 	// Create a GLFWwindow object of 800 by 800 pixels, naming it "YoutubeOpenGL"
-	GLFWwindow* window = glfwCreateWindow(width, height, "YoutubeOpenGL", NULL, NULL);
+	GLFWwindow* window = glfwCreateWindow(width, height, "cg_beleg", NULL, NULL);
 	// Error check if the window fails to create
 	if (window == NULL)
 	{
@@ -47,10 +93,6 @@ int main()
 	// Specify the viewport of OpenGL in the Window
 	// In this case the viewport goes from x = 0, y = 0, to x = 800, y = 800
 	glViewport(0, 0, width, height);
-
-
-
-
 
 	// Generates Shader objects
 	Shader shaderProgram("default.vert", "default.frag");
@@ -70,7 +112,6 @@ int main()
 	skyboxShader.Activate();
 	glUniform1i(glGetUniformLocation(skyboxShader.ID, "skybox"), 0);
 
-
 	
 	// Enables the Depth Buffer
 	glEnable(GL_DEPTH_TEST);
@@ -82,53 +123,66 @@ int main()
 	glFrontFace(GL_CCW);
 
 
-	glm::vec3 initialPosition = glm::vec3(20.0f, 10.f, 10.f);
-	Camera camera(width, height, initialPosition);
-	Flame flame(initialPosition, (homeDir + "/resources/flame/scene.gltf").c_str());
+	// Initialize camera and flame
+	Camera camera(width, height, spaceshipPosition);
+	Flame flame(spaceshipPosition, (homeDir + "/resources/flame/scene.gltf").c_str());
 
-	Spaceship spaceship(initialPosition, (homeDir + "/resources/spaceship/scene.gltf").c_str(), width, height, &camera, &flame);
+	// Initialize the spaceship with camera and flame pointers
+	Spaceship spaceship(spaceshipPosition, (homeDir + "/resources/spaceship/scene.gltf").c_str(), width, height, &camera, &flame);
 
+	
+	activePlanetIndex = rand() % 8;
 
-
+	// Set up planets positions and scales
 	Model sun((homeDir + "/resources/planets/sun/scene.gltf").c_str());
-	sun.Move(glm::vec3(0.0f, 0.0f, 0.0f));
-	sun.setScale(10.0f);
+	sun.MoveToPoint(SunPosition);
+	sun.setScale(SunScale);
 
 	Model mercury((homeDir + "/resources/planets/mercury/scene.gltf").c_str());
-	mercury.Move(glm::vec3( 10.0f + 4.10f, 0.0f, 0.0f));
-	mercury.setScale(0.035f);
+
+	planetPositions.push_back(MercuyPosition);
+	mercury.MoveToPoint(MercuyPosition);
+	mercury.setScale(MercuryScale);
 
 	Model venus((homeDir + "/resources/planets/venus/scene.gltf").c_str());
-	venus.Move(glm::vec3(10.0f + 7.70f, 0.0f, 0.0f));
-	venus.setScale(0.086f);
+
+	venus.MoveToPoint(VenusPosition);
+	venus.setScale(VenusScale);
 
 	Model earth((homeDir + "/resources/planets/earth/scene.gltf").c_str());
-	earth.Move(glm::vec3(10.0f + 10.70f, 0.0f, 0.0f));
-	earth.setScale(0.091f);
+
+	earth.MoveToPoint(EarthPosition);
+	earth.setScale(EarthScale);
 
 	Model moon((homeDir + "/resources/planets/moon/scene.gltf").c_str());
-	moon.Move(glm::vec3(10.0f  + 10.7275f, 0.1f, 0.0f));
-	moon.setScale(0.025f);
+
+	moon.MoveToPoint(MoonPosition);
+	moon.setScale(MoonScale);
 
 	Model mars((homeDir + "/resources/planets/mars/scene.gltf").c_str());
-	mars.Move(glm::vec3(10.0f + 16.30f, 0.0f, 0.0f));
-	mars.setScale(0.049f);
+
+	mars.MoveToPoint(MarsPosition);
+	mars.setScale(MarsScale);
 
 	Model jupiter((homeDir + "/resources/planets/jupiter/scene.gltf").c_str());
-	jupiter.Move(glm::vec3(10.0f + 55.60f, 0.0f, 0.0f));
-	jupiter.setScale(1.02f);
+
+	jupiter.MoveToPoint(JupiterPosition);
+	jupiter.setScale(JupiterScale);
 
 	Model saturn((homeDir + "/resources/planets/saturn/scene.gltf").c_str());
-	saturn.Move(glm::vec3(10.0f + 101.90f, 0.0f, 0.0f));
-	saturn.setScale(0.86f);
+
+	saturn.MoveToPoint(SaturnPosition);
+	saturn.setScale(SaturnScale);
 
 	Model uranus((homeDir + "/resources/planets/uranus/scene.gltf").c_str());
-	uranus.Move(glm::vec3(205.10f, 0.0f, 0.0f));
-	uranus.setScale(0.37f);
+
+	uranus.MoveToPoint(UranusPosition);
+	uranus.setScale(UranusScale);
 	
 	Model neptune((homeDir + "/resources/planets/neptune/scene.gltf").c_str());
-	neptune.Move(glm::vec3(321.30f, 0.0f, 0.0f));
-	neptune.setScale(0.35f);
+
+	neptune.MoveToPoint(NeptunePosition);
+	neptune.setScale(NeptuneScale);
 
 
 	std::string facesCubemap[6] =
@@ -168,21 +222,17 @@ int main()
 		timeDiff = crntTime - prevTime;
 		counter++;
 
-		if (timeDiff >= 1.0 / 30.0)
-		{
-			// Creates new title
-			std::string FPS = std::to_string((1.0 / timeDiff) * counter);
-			std::string ms = std::to_string((timeDiff / counter) * 1000);
-			std::string newTitle = "cg_beleg - " + FPS + "FPS / " + ms + "ms";
-			glfwSetWindowTitle(window, newTitle.c_str());
+		// set window title
+		std::string titleBegin = "fly to: < ";
+		std::string titleEnd = " > !";
+		glfwSetWindowTitle(window, (titleBegin + planetNames[activePlanetIndex] + titleEnd).c_str());
 
-			// Resets times and counter
-			prevTime = crntTime;
-			counter = 0;
-
-			// Use this if you have disabled VSync
-			//camera.Inputs(window);
+		if (glm::distance(spaceshipPosition, planetPositions[activePlanetIndex] ) < planetScales[activePlanetIndex] + 0.5f) {
+			glfwSetWindowTitle(window,"correct!");
+			activePlanetIndex = rand() % 8;
 		}
+
+		
 
 		// Specify the color of the background
 		glClearColor(0.07f, 0.13f, 0.17f, 1.0f);
@@ -192,17 +242,15 @@ int main()
 		// Handles camera inputs (delete this if you have disabled VSync)
 		spaceship.Inputs(window);
 		spaceship.executeMovement();
-		camera.setPosition(spaceship.Position);
-		flame.setPosition(spaceship.Position);
-
-
+		spaceshipPosition = spaceship.Position;
+		camera.setPosition(spaceshipPosition);
+		flame.setPosition(spaceshipPosition);
 
 		// Updates and exports the camera matrix to the Vertex Shader
 		camera.updateMatrix(45.0f, 0.025f, 1000.0f);
 
 
-
-		// Draw the normal model
+		// Draw the models and rotate the planets;
 		spaceship.model.Draw(shaderProgram, camera);
 		flame.model.Draw(sunShader, camera);
 
@@ -236,12 +284,8 @@ int main()
 		neptune.Draw(shaderProgram, camera);
 		neptune.RotateByAngle(0.01f, glm::vec3(0.0f, 0.5f, 0.5f));
 	
-
 		// Draw the skybox
 		skybox.Draw(width, height, camera, skyboxShader);
-
-		
-
 
 		// Swap the back buffer with the front buffer
 		glfwSwapBuffers(window);
