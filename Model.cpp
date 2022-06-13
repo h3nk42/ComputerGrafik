@@ -52,6 +52,14 @@ void Model::RotateByAngle(float angle, glm::vec3 axis) {
 
 }
 
+void Model::setRotation(glm::quat newRotation) {
+	for (unsigned int i = 0; i < meshes.size(); i++)
+	{
+		rotationsMeshes[i] = newRotation;
+	}
+}
+
+
 void Model::ResetRotation() {
 
 	glm::quat rot = glm::angleAxis(glm::radians(0.0f), glm::vec3(1,0,0));

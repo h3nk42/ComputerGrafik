@@ -19,6 +19,7 @@ public:
 	void MoveToPoint(glm::vec3 point);
 
 	void RotateByAngle(float angle, glm::vec3 axis);
+	void setRotation(glm::quat newRotation);
 	void ResetRotation();
 
 	void Scale(float scaleValue);

@@ -20,12 +20,14 @@ public:
 
 	Model model;
 
-	glm::vec3 Orientation = glm::vec3(0.0f, 0.0f, -1.0f);
+	const glm::vec3 OriginalOrientation = glm::vec3(0.0f, 0.0f, -1.0f);
+
+	glm::vec3 Orientation = OriginalOrientation;
 	glm::vec3 Up = glm::vec3(0.0f, 1.0f, 0.0f);
 
 	float velocity = 0.0f;
 
-	float speed = 0.05f;
+	float speed = 0.01f;
 
 
 	Spaceship(glm::vec3 position, const char* file, int width, int height, Camera* camera);
@@ -33,6 +35,9 @@ public:
 	void Inputs(GLFWwindow* window);
 
 	void executeMovement();
+
+
+
 private:
 	double prevVelocityChangedTime = 0.0;
 	double crntVelocityChangedTime = 0.0;

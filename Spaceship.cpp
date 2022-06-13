@@ -11,6 +11,9 @@ Spaceship::Spaceship(glm::vec3 position, const char* filePath, int _width, int _
 	model.Scale(0.01f);
 	model.RotateByAngle(float(-90.0f), glm::vec3(1, 0, 0));
 	model.RotateByAngle(float(-90.0f), glm::vec3(0, 1, 0));
+	model.RotateByAngle(float(-5.0f), glm::vec3(0, 0, 1));
+
+	
 
 
 	width = _width;
@@ -42,11 +45,19 @@ void Spaceship::Inputs(GLFWwindow* window)
 	}
 	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
 	{
-		model.RotateByAngle(1.0f,glm::vec3(0,0,1));
+		model.RotateByAngle(1.0f,glm::vec3(1,0,0));
 	}
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
 	{
-		model.RotateByAngle(-1.0f,glm::vec3(0,0,1));
+		model.RotateByAngle(-1.0f,glm::vec3(1,0,0));
+	}
+	if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
+	{
+		model.RotateByAngle(1.0f, glm::vec3(0, 1, 0));
+	}
+	if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
+	{
+		model.RotateByAngle(-1.0f, glm::vec3(0, 1, 0));
 	}
 	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
 	{
@@ -88,15 +99,31 @@ void Spaceship::Inputs(GLFWwindow* window)
 		// Calculates upcoming vertical change in the Orientation
 		
 		glm::vec3 newOrientationVertical = glm::rotate(Orientation, glm::radians(rotX), glm::normalize(glm::cross(Orientation, Up)));
-		model.RotateByAngle(-rotX, glm::normalize(glm::cross(Orientation, glm::vec3(1,0,0))));
 
-		Orientation = newOrientationVertical;
+		if (abs(glm::angle(newOrientationVertical, Up) - glm::radians(90.0f)) <= glm::radians(45.0f))
+		{
+			Orientation = newOrientationVertical;
+		}
+
 
 		glm::vec3 newOrientationHorizontal = glm::rotate(Orientation, glm::radians(rotY), Up);
-		model.RotateByAngle(rotY, glm::vec3(1, 0, 0));
 
 		Orientation = newOrientationHorizontal;
 		(*camera).setOrientation(Orientation);
+
+		glm::vec3 rotationAxis = glm::normalize(glm::cross(OriginalOrientation, Orientation));
+
+		
+		float angle = glm::orientedAngle(glm::normalize(OriginalOrientation), glm::normalize(Orientation), rotationAxis);
+		std::cout << glm::degrees(angle) << std::endl;
+
+
+		model.setRotation(glm::angleAxis(angle, rotationAxis));
+
+		model.RotateByAngle(float(-90.0f), glm::vec3(1, 0, 0));
+		model.RotateByAngle(float(-90.0f), glm::vec3(0, 1, 0));
+		model.RotateByAngle(float(-5.0f), glm::vec3(0, 0, 1));
+
 
 
 		// Sets mouse cursor to the middle of the screen so that it doesn't end up roaming around
@@ -112,3 +139,4 @@ void Spaceship::Inputs(GLFWwindow* window)
 
 	
 }
+
