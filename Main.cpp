@@ -6,6 +6,7 @@ namespace fs = std::filesystem;
 #include"Model.h"
 #include"Skybox.h"
 #include"Spaceship.h"
+#include"Flame.h"
 
 //define size of window
 const unsigned int width = 1920;
@@ -80,57 +81,54 @@ int main()
 	// Uses counter clock-wise standard
 	glFrontFace(GL_CCW);
 
-	// Creates camera object
-	Camera camera(width, height, glm::vec3(-5.506314f, 2.163434f, 0.769911f));
 
-	Spaceship spaceship(glm::vec3(0, 0, 0), (homeDir + "/resources/spaceship/scene.gltf").c_str(), width, height, &camera);
+	glm::vec3 initialPosition = glm::vec3(20.0f, 10.f, 10.f);
+	Camera camera(width, height, initialPosition);
+	Flame flame(initialPosition, (homeDir + "/resources/flame/scene.gltf").c_str());
+
+	Spaceship spaceship(initialPosition, (homeDir + "/resources/spaceship/scene.gltf").c_str(), width, height, &camera, &flame);
 
 
-
-
-	
-	Model flame((homeDir + "/resources/flame/scene.gltf").c_str());
-	glm::vec3 spaceShipFlameDifference = glm::vec3(0.0f, -0.02f, -0.1f);
 
 	Model sun((homeDir + "/resources/planets/sun/scene.gltf").c_str());
 	sun.Move(glm::vec3(0.0f, 0.0f, 0.0f));
-	sun.Scale(10.0f);
+	sun.setScale(10.0f);
 
 	Model mercury((homeDir + "/resources/planets/mercury/scene.gltf").c_str());
 	mercury.Move(glm::vec3( 10.0f + 4.10f, 0.0f, 0.0f));
-	mercury.Scale(0.035f);
+	mercury.setScale(0.035f);
 
 	Model venus((homeDir + "/resources/planets/venus/scene.gltf").c_str());
 	venus.Move(glm::vec3(10.0f + 7.70f, 0.0f, 0.0f));
-	venus.Scale(0.086f);
+	venus.setScale(0.086f);
 
 	Model earth((homeDir + "/resources/planets/earth/scene.gltf").c_str());
 	earth.Move(glm::vec3(10.0f + 10.70f, 0.0f, 0.0f));
-	earth.Scale(0.091f);
+	earth.setScale(0.091f);
 
 	Model moon((homeDir + "/resources/planets/moon/scene.gltf").c_str());
 	moon.Move(glm::vec3(10.0f  + 10.7275f, 0.1f, 0.0f));
-	moon.Scale(0.025f);
+	moon.setScale(0.025f);
 
 	Model mars((homeDir + "/resources/planets/mars/scene.gltf").c_str());
 	mars.Move(glm::vec3(10.0f + 16.30f, 0.0f, 0.0f));
-	mars.Scale(0.049f);
+	mars.setScale(0.049f);
 
 	Model jupiter((homeDir + "/resources/planets/jupiter/scene.gltf").c_str());
 	jupiter.Move(glm::vec3(10.0f + 55.60f, 0.0f, 0.0f));
-	jupiter.Scale(1.02f);
+	jupiter.setScale(1.02f);
 
 	Model saturn((homeDir + "/resources/planets/saturn/scene.gltf").c_str());
 	saturn.Move(glm::vec3(10.0f + 101.90f, 0.0f, 0.0f));
-	saturn.Scale(0.86f);
+	saturn.setScale(0.86f);
 
 	Model uranus((homeDir + "/resources/planets/uranus/scene.gltf").c_str());
 	uranus.Move(glm::vec3(205.10f, 0.0f, 0.0f));
-	uranus.Scale(0.37f);
+	uranus.setScale(0.37f);
 	
 	Model neptune((homeDir + "/resources/planets/neptune/scene.gltf").c_str());
 	neptune.Move(glm::vec3(321.30f, 0.0f, 0.0f));
-	neptune.Scale(0.35f);
+	neptune.setScale(0.35f);
 
 
 	std::string facesCubemap[6] =
@@ -192,21 +190,21 @@ int main()
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		// Handles camera inputs (delete this if you have disabled VSync)
-		camera.Inputs(window);
 		spaceship.Inputs(window);
 		spaceship.executeMovement();
 		camera.setPosition(spaceship.Position);
+		flame.setPosition(spaceship.Position);
 
 
 
 		// Updates and exports the camera matrix to the Vertex Shader
-		camera.updateMatrix(45.0f, 0.05f, 1000.0f);
+		camera.updateMatrix(45.0f, 0.025f, 1000.0f);
 
 
 
 		// Draw the normal model
 		spaceship.model.Draw(shaderProgram, camera);
-		flame.Draw(shaderProgram, camera);
+		flame.model.Draw(sunShader, camera);
 
 		sun.Draw(sunShader, camera);
 		sun.RotateByAngle(0.0005f, glm::vec3(0.0f, 0.5f, 0.5f));

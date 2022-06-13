@@ -38,8 +38,6 @@ public:
 	void updateMatrix(float FOVdeg, float nearPlane, float farPlane);
 	// Exports the camera matrix to a shader
 	void Matrix(Shader& shader, const char* uniform);
-	// Handles camera inputs
-	void Inputs(GLFWwindow* window);
 
 	void setPosition(glm::vec3 newPosition);
 

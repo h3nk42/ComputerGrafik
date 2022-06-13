@@ -2,17 +2,16 @@
 
 
 
-Spaceship::Spaceship(glm::vec3 position, const char* filePath, int _width, int _height, Camera* _camera)
+Spaceship::Spaceship(glm::vec3 position, const char* filePath, int _width, int _height, Camera* _camera, Flame* _flame)
 {
 	Position = position;
 
 	Model spaceshipModel(filePath);
 	model = spaceshipModel;
-	model.Scale(0.01f);
+	model.setScale(0.01f);
 	model.RotateByAngle(float(-90.0f), glm::vec3(1, 0, 0));
 	model.RotateByAngle(float(-90.0f), glm::vec3(0, 1, 0));
 	model.RotateByAngle(float(-5.0f), glm::vec3(0, 0, 1));
-
 	
 
 
@@ -20,6 +19,7 @@ Spaceship::Spaceship(glm::vec3 position, const char* filePath, int _width, int _
 	height = _height;
 
 	camera = _camera;
+	flame = _flame;
 
 }
 
@@ -37,10 +37,11 @@ void Spaceship::Inputs(GLFWwindow* window)
 		crntVelocityChangedTime = glfwGetTime();
 		double timeDiff = crntVelocityChangedTime - prevVelocityChangedTime;
 		if (timeDiff > 0.2) {
-			if (velocity < 3) {
+			if (velocity < 6) {
 				velocity++;
 			}
 			prevVelocityChangedTime = crntVelocityChangedTime;
+			flame->setSize(velocity);
 		}
 	}
 	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
@@ -64,15 +65,16 @@ void Spaceship::Inputs(GLFWwindow* window)
 		crntVelocityChangedTime = glfwGetTime();
 		double timeDiff = crntVelocityChangedTime - prevVelocityChangedTime;
 		if (timeDiff > 0.2) {
-			if (velocity > -3) {
+			if (velocity > 0) {
 				velocity--;
 			}
 			prevVelocityChangedTime = crntVelocityChangedTime;
+			flame->setSize(velocity);
 		}
 	}
 
 	// Handles mouse inputs
-	if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS)
+	if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
 	{
 		// Hides mouse cursor
 		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
@@ -110,6 +112,7 @@ void Spaceship::Inputs(GLFWwindow* window)
 
 		Orientation = newOrientationHorizontal;
 		(*camera).setOrientation(Orientation);
+		(*flame).setOrientation(Orientation);
 
 		glm::vec3 rotationAxis = glm::normalize(glm::cross(OriginalOrientation, Orientation));
 
@@ -117,7 +120,7 @@ void Spaceship::Inputs(GLFWwindow* window)
 		float angle = glm::orientedAngle(glm::normalize(OriginalOrientation), glm::normalize(Orientation), rotationAxis);
 		std::cout << glm::degrees(angle) << std::endl;
 
-
+		// Spaceship rotation
 		model.setRotation(glm::angleAxis(angle, rotationAxis));
 
 		model.RotateByAngle(float(-90.0f), glm::vec3(1, 0, 0));
@@ -125,11 +128,10 @@ void Spaceship::Inputs(GLFWwindow* window)
 		model.RotateByAngle(float(-5.0f), glm::vec3(0, 0, 1));
 
 
-
 		// Sets mouse cursor to the middle of the screen so that it doesn't end up roaming around
 		glfwSetCursorPos(window, (width / 2), (height / 2));
 	}
-	else if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_RELEASE)
+	else if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_RELEASE)
 	{
 		// Unhides cursor since camera is not looking around anymore
 		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);

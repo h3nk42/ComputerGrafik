@@ -37,7 +37,7 @@ void Model::MoveToPoint(glm::vec3 point) {
 
 	for (unsigned int i = 0; i < meshes.size(); i++)
 	{
-		translationsMeshes[i] =point;
+		translationsMeshes[i] = point;
 	}
 }
 
@@ -72,11 +72,11 @@ void Model::ResetRotation() {
 }
 
 
-void Model::Scale(float scaleValue) {
+void Model::setScale(float scaleValue) {
 
 	for (unsigned int i = 0; i < meshes.size(); i++)
-	{
-		scalesMeshes[i] = scalesMeshes[i] * scaleValue;
+	{	
+		scalesMeshes[i] = glm::vec3(1) *scaleValue;
 	}
 }
 

@@ -22,7 +22,7 @@ public:
 	void setRotation(glm::quat newRotation);
 	void ResetRotation();
 
-	void Scale(float scaleValue);
+	void setScale(float scaleValue);
 
 	Model() = default;
 

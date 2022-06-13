@@ -11,6 +11,7 @@
 
 #include"Model.h"
 #include"shaderClass.h"
+#include"Flame.h"
 
 class Spaceship
 {
@@ -30,7 +31,7 @@ public:
 	float speed = 0.01f;
 
 
-	Spaceship(glm::vec3 position, const char* file, int width, int height, Camera* camera);
+	Spaceship(glm::vec3 position, const char* file, int width, int height, Camera* camera, Flame* flame);
 
 	void Inputs(GLFWwindow* window);
 
@@ -53,6 +54,8 @@ private:
 	float sensitivity = 100.0f;
 
 	Camera* camera;
+
+	Flame* flame;
 
 };
 
