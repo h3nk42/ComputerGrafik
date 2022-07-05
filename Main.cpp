@@ -92,8 +92,8 @@ int main()
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 
-	// Create a GLFWwindow object of 800 by 800 pixels, naming it "YoutubeOpenGL"
-	GLFWwindow* window = glfwCreateWindow(width, height, "cg_beleg", NULL, NULL);
+	// Create a GLFWwindow object of 800 by 800 pixels, naming it "Solar System"
+	GLFWwindow* window = glfwCreateWindow(width, height, "Solar System", NULL, NULL);
 	// Error check if the window fails to create
 	if (window == NULL)
 	{
@@ -348,7 +348,7 @@ int main()
 		// Text that appears in the window
 		std::string scoreString = std::to_string(score);
 
-		if (score == 20) {
+		if (score == 80) {
 			ImGui::Text("Congratulations, you\ndiscovered the whole\nsolar system!!");
 		}
 		else ImGui::Text((titleBegin + planetNames[activePlanetIndex] + titleEnd + "\n\nScore: " + scoreString).c_str());
