@@ -1,11 +1,11 @@
 #include"Spaceship.h"
+#include "global.h"
 
 
 
 Spaceship::Spaceship(glm::vec3 position, const char* filePath, int _width, int _height, Camera* _camera, Flame* _flame)
 {
 	Position = position;
-
 	Model spaceshipModel(filePath);
 	model = spaceshipModel;
 	model.setScale(0.01f);
@@ -26,6 +26,21 @@ Spaceship::Spaceship(glm::vec3 position, const char* filePath, int _width, int _
 void Spaceship::executeMovement() {
 	Position += speed * velocity * 1.3f * Orientation;
 	model.MoveToPoint(Position);
+		for (int i = 0; i < 8; i++) {
+			if (glm::distance(Position, planetPositions[i]) < planetScales[i] + 0.05f) {
+				velocity = 0;
+				flame->setSize(velocity);
+			}
+		
+		}
+		if (glm::distance(Position, SunPosition) < SunScale + 0.1f) {
+			velocity = 0;
+			flame->setSize(velocity);
+		}
+		if (glm::distance(Position, MoonPosition) < MoonScale + 0.05f) {
+			velocity = 0;
+			flame->setSize(velocity);
+		}
 }
 
 
@@ -36,16 +51,20 @@ void Spaceship::Inputs(GLFWwindow* window)
 	// apply debounce to velocity change
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
 	{
-		crntVelocityChangedTime = glfwGetTime();
-		double timeDiff = crntVelocityChangedTime - prevVelocityChangedTime;
-		if (timeDiff > 0.2) {
-			if (velocity < 6) {
-				velocity++;
+		
+			crntVelocityChangedTime = glfwGetTime();
+			double timeDiff = crntVelocityChangedTime - prevVelocityChangedTime;
+			if (timeDiff > 0.2) {
+				if (velocity < 6) {
+					velocity++;
+				}
+				prevVelocityChangedTime = crntVelocityChangedTime;
+				flame->setSize(velocity);
 			}
-			prevVelocityChangedTime = crntVelocityChangedTime;
-			flame->setSize(velocity);
-		}
+		
+			
 	}
+
 
 	// apply debounce to velocity change
 	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
@@ -53,7 +72,7 @@ void Spaceship::Inputs(GLFWwindow* window)
 		crntVelocityChangedTime = glfwGetTime();
 		double timeDiff = crntVelocityChangedTime - prevVelocityChangedTime;
 		if (timeDiff > 0.2) {
-			if (velocity > 0) {
+			if (velocity > -1) {
 				velocity--;
 			}
 			prevVelocityChangedTime = crntVelocityChangedTime;
@@ -118,7 +137,7 @@ void Spaceship::Inputs(GLFWwindow* window)
 		// Sets mouse cursor to the middle of the screen so that it doesn't end up roaming around
 		glfwSetCursorPos(window, (width / 2), (height / 2));
 	}
-	else if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_RELEASE)
+	else if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_RELEASE)
 	{
 		// Unhides cursor since camera is not looking around anymore
 		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);

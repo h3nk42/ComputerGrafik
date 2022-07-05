@@ -29,7 +29,7 @@ void Flame::setOrientation(glm::vec3 newOrientation)
 	glm::vec3 rotationAxis = glm::normalize(glm::cross(OriginalOrientation, Orientation));
 
 	float angle = glm::orientedAngle(glm::normalize(OriginalOrientation), glm::normalize(Orientation), rotationAxis);
-	std::cout << glm::degrees(angle) << std::endl;
+	//std::cout << glm::degrees(angle) << std::endl;
 
 	// Flame rotation
 	model.setRotation(glm::angleAxis(angle, rotationAxis));

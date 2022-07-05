@@ -3,10 +3,21 @@
 namespace fs = std::filesystem;
 //------------------------------
 
+#include<Windows.h>
+#include<MMSystem.h>
+#include<iostream>
+
+using namespace std;
+#include"imgui.h"
+#include"imgui_impl_glfw.h"
+#include"imgui_impl_opengl3.h"
+
 #include"Model.h"
 #include"Skybox.h"
 #include"Spaceship.h"
 #include"Flame.h"
+#include "global.h"
+
 
 //define size of window
 const unsigned int width = 1920;
@@ -65,6 +76,7 @@ uint8_t activePlanetIndex = 0;
 
 int main()
 {
+	
 	// Initialize GLFW
 	glfwInit();
 
@@ -75,6 +87,7 @@ int main()
 	// Tell GLFW we are using the CORE profile
 	// So that means we only have the modern functions
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
 
 	// Create a GLFWwindow object of 800 by 800 pixels, naming it "YoutubeOpenGL"
 	GLFWwindow* window = glfwCreateWindow(width, height, "cg_beleg", NULL, NULL);
@@ -90,6 +103,9 @@ int main()
 
 	//Load GLAD so it configures OpenGL
 	gladLoadGL();
+
+	
+
 	// Specify the viewport of OpenGL in the Window
 	// In this case the viewport goes from x = 0, y = 0, to x = 800, y = 800
 	glViewport(0, 0, width, height);
@@ -130,7 +146,8 @@ int main()
 	// Initialize the spaceship with camera and flame pointers
 	Spaceship spaceship(spaceshipPosition, (homeDir + "/resources/spaceship/scene.gltf").c_str(), width, height, &camera, &flame);
 
-	
+	srand(time(NULL));
+
 	activePlanetIndex = rand() % 8;
 
 	// Set up planets positions and scales
@@ -195,6 +212,11 @@ int main()
 		homeDir + "/resources/skybox2/back.jpg"
 	};
 
+	std::string songSource = homeDir + "/resources/sounds/open-space.wav";
+	std::wstring backgroundSound = std::wstring(songSource.begin(), songSource.end());
+
+	PlaySound(backgroundSound.data(), NULL, SND_SYSTEM | SND_ASYNC );
+
 	Skybox skybox(facesCubemap);
 
 
@@ -211,6 +233,13 @@ int main()
 
 	glm::vec3 prevCameraPosition = camera.Position;
 
+	// Initialize ImGUI
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+	ImGuiIO& io = ImGui::GetIO(); (void)io;
+	ImGui::StyleColorsDark();
+	ImGui_ImplGlfw_InitForOpenGL(window, true);
+	ImGui_ImplOpenGL3_Init("#version 330");
 
 	// Main while loop
 	while (!glfwWindowShouldClose(window))
@@ -223,21 +252,37 @@ int main()
 		counter++;
 
 		// set window title
-		std::string titleBegin = "fly to: < ";
+		std::string titleBegin = "Fly to: < ";
 		std::string titleEnd = " > !";
-		glfwSetWindowTitle(window, (titleBegin + planetNames[activePlanetIndex] + titleEnd).c_str());
+		std::string successSource = homeDir + "/resources/sounds/shooting_star.wav";
+		std::wstring successSound = std::wstring(successSource.begin(), successSource.end());
+		//if you are using unicode
+		//std::string a = "open " + successSource + " type mpegvideo";
+		//std::wstring stemp = std::wstring(a.begin(), a.end());
+		std::string b = "play " + successSource;
+		std::wstring stempb = std::wstring(b.begin(), b.end());
+
+		//std::cout << successSource;
+		//std::string c = "close " + successSource;
+		//std::wstring stempc = std::wstring(c.begin(), c.end());
 
 		if (glm::distance(spaceshipPosition, planetPositions[activePlanetIndex] ) < planetScales[activePlanetIndex] + 0.5f) {
-			glfwSetWindowTitle(window,"correct!");
 			activePlanetIndex = rand() % 8;
+			mciSendString(stempb.data(), NULL, 0, 0);
 		}
 
-		
 
 		// Specify the color of the background
 		glClearColor(0.07f, 0.13f, 0.17f, 1.0f);
 		// Clean the back buffer and depth buffer
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+
+		// Tell OpenGL a new frame is about to begin
+		ImGui_ImplOpenGL3_NewFrame();
+		ImGui_ImplGlfw_NewFrame();
+		ImGui::NewFrame();
+
 
 		// Handles camera inputs (delete this if you have disabled VSync)
 		spaceship.Inputs(window);
@@ -287,11 +332,36 @@ int main()
 		// Draw the skybox
 		skybox.Draw(width, height, camera, skyboxShader);
 
+
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, { 450.f,150.f });
+
+		// ImGUI window creation
+		ImGui::Begin("Missions to be done:", nullptr, ImGuiWindowFlags_NoCollapse);
+		ImGui::SetNextWindowPos(ImVec2(80, 80));
+		ImGui::PopStyleVar(1);
+		//ImGui::PushStyleColor(ImGuiCol_ResizeGrip, 0);
+
+		// Text that appears in the window
+		ImGui::Text((titleBegin + planetNames[activePlanetIndex] + titleEnd).c_str());
+		ImGui::SetWindowFontScale(3);
+
+
+		// Ends the window
+		ImGui::End();
+		// Renders the ImGUI elements
+		ImGui::Render();
+		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
 		// Swap the back buffer with the front buffer
 		glfwSwapBuffers(window);
 		// Take care of all GLFW events
 		glfwPollEvents();
 	}
+
+	// Deletes all ImGUI instances
+	ImGui_ImplOpenGL3_Shutdown();
+	ImGui_ImplGlfw_Shutdown();
+	ImGui::DestroyContext();
 
 	// Delete all the objects we've created
 	shaderProgram.Delete();
