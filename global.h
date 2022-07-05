@@ -8,7 +8,7 @@ extern float SunScale;
 extern glm::vec3 SunPosition;
 extern float MoonScale;
 extern glm::vec3 MoonPosition;
-
+extern int score;
 extern std::vector <glm::vec3> planetPositions;
 extern std::vector <float> planetScales;
 #endif
