@@ -23,6 +23,9 @@ using namespace std;
 const unsigned int width = 1920;
 const unsigned int height = 1080;
 
+//initilize score
+int score = 0;
+
 glm::vec3 spaceshipPosition = glm::vec3(20.0f, 0.f, 10.f);
 
 
@@ -76,7 +79,7 @@ uint8_t activePlanetIndex = 0;
 
 int main()
 {
-	
+
 	// Initialize GLFW
 	glfwInit();
 
@@ -89,8 +92,8 @@ int main()
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 
-	// Create a GLFWwindow object of 800 by 800 pixels, naming it "YoutubeOpenGL"
-	GLFWwindow* window = glfwCreateWindow(width, height, "cg_beleg", NULL, NULL);
+	// Create a GLFWwindow object of 800 by 800 pixels, naming it "Solar System"
+	GLFWwindow* window = glfwCreateWindow(width, height, "Solar System", NULL, NULL);
 	// Error check if the window fails to create
 	if (window == NULL)
 	{
@@ -104,7 +107,7 @@ int main()
 	//Load GLAD so it configures OpenGL
 	gladLoadGL();
 
-	
+
 
 	// Specify the viewport of OpenGL in the Window
 	// In this case the viewport goes from x = 0, y = 0, to x = 800, y = 800
@@ -128,7 +131,7 @@ int main()
 	skyboxShader.Activate();
 	glUniform1i(glGetUniformLocation(skyboxShader.ID, "skybox"), 0);
 
-	
+
 	// Enables the Depth Buffer
 	glEnable(GL_DEPTH_TEST);
 	// Enables Cull Facing
@@ -195,7 +198,7 @@ int main()
 
 	uranus.MoveToPoint(UranusPosition);
 	uranus.setScale(UranusScale);
-	
+
 	Model neptune((homeDir + "/resources/planets/neptune/scene.gltf").c_str());
 
 	neptune.MoveToPoint(NeptunePosition);
@@ -215,7 +218,7 @@ int main()
 	std::string songSource = homeDir + "/resources/sounds/open-space.wav";
 	std::wstring backgroundSound = std::wstring(songSource.begin(), songSource.end());
 
-	PlaySound(backgroundSound.data(), NULL, SND_SYSTEM | SND_ASYNC );
+	PlaySound(backgroundSound.data(), NULL, SND_SYSTEM | SND_ASYNC);
 
 	Skybox skybox(facesCubemap);
 
@@ -266,8 +269,9 @@ int main()
 		//std::string c = "close " + successSource;
 		//std::wstring stempc = std::wstring(c.begin(), c.end());
 
-		if (glm::distance(spaceshipPosition, planetPositions[activePlanetIndex] ) < planetScales[activePlanetIndex] + 0.5f) {
+		if (glm::distance(spaceshipPosition, planetPositions[activePlanetIndex]) < planetScales[activePlanetIndex] + 0.5f) {
 			activePlanetIndex = rand() % 8;
+			score += 10;
 			mciSendString(stempb.data(), NULL, 0, 0);
 		}
 
@@ -328,7 +332,7 @@ int main()
 
 		neptune.Draw(shaderProgram, camera);
 		neptune.RotateByAngle(0.01f, glm::vec3(0.0f, 0.5f, 0.5f));
-	
+
 		// Draw the skybox
 		skybox.Draw(width, height, camera, skyboxShader);
 
@@ -342,7 +346,12 @@ int main()
 		//ImGui::PushStyleColor(ImGuiCol_ResizeGrip, 0);
 
 		// Text that appears in the window
-		ImGui::Text((titleBegin + planetNames[activePlanetIndex] + titleEnd).c_str());
+		std::string scoreString = std::to_string(score);
+
+		if (score == 80) {
+			ImGui::Text("Congratulations, you\ndiscovered the whole\nsolar system!!");
+		}
+		else ImGui::Text((titleBegin + planetNames[activePlanetIndex] + titleEnd + "\n\nScore: " + scoreString).c_str());
 		ImGui::SetWindowFontScale(3);
 
 
