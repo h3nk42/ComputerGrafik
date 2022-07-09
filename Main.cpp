@@ -114,7 +114,7 @@ int main()
 	glViewport(0, 0, width, height);
 
 	// Generates Shader objects
-	Shader shaderProgram("default.vert", "default.frag");
+	Shader defaultShader("default.vert", "default.frag");
 	Shader skyboxShader("skybox.vert", "skybox.frag");
 	Shader sunShader("default.vert", "sun.frag");
 
@@ -122,12 +122,12 @@ int main()
 	glm::vec4 lightColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
 	glm::vec3 lightPos = glm::vec3(10.0f, 0.0f, 0.0f);
 
-	shaderProgram.Activate();
-	glUniform4f(glGetUniformLocation(shaderProgram.ID, "lightColor"), lightColor.x, lightColor.y, lightColor.z, lightColor.w);
-	glUniform3f(glGetUniformLocation(shaderProgram.ID, "lightPos"), lightPos.x, lightPos.y, lightPos.z);
+	defaultShader.Activate();
+	glUniform4f(glGetUniformLocation(defaultShader.ID, "lightColor"), lightColor.x, lightColor.y, lightColor.z, lightColor.w);
+	glUniform3f(glGetUniformLocation(defaultShader.ID, "lightPos"), lightPos.x, lightPos.y, lightPos.z);
 	sunShader.Activate();
-	glUniform4f(glGetUniformLocation(shaderProgram.ID, "lightColor"), lightColor.x, lightColor.y, lightColor.z, lightColor.w);
-	glUniform3f(glGetUniformLocation(shaderProgram.ID, "lightPos"), lightPos.x, lightPos.y, lightPos.z);
+	glUniform4f(glGetUniformLocation(defaultShader.ID, "lightColor"), lightColor.x, lightColor.y, lightColor.z, lightColor.w);
+	glUniform3f(glGetUniformLocation(defaultShader.ID, "lightPos"), lightPos.x, lightPos.y, lightPos.z);
 	skyboxShader.Activate();
 	glUniform1i(glGetUniformLocation(skyboxShader.ID, "skybox"), 0);
 
@@ -300,37 +300,37 @@ int main()
 
 
 		// Draw the models and rotate the planets;
-		spaceship.model.Draw(shaderProgram, camera);
+		spaceship.model.Draw(defaultShader, camera);
 		flame.model.Draw(sunShader, camera);
 
 		sun.Draw(sunShader, camera);
 		sun.RotateByAngle(0.0005f, glm::vec3(0.0f, 0.5f, 0.5f));
 
-		mercury.Draw(shaderProgram, camera);
+		mercury.Draw(defaultShader, camera);
 		mercury.RotateByAngle(0.01f, glm::vec3(0.0f, 0.5f, 0.5f));
 
-		earth.Draw(shaderProgram, camera);
+		earth.Draw(defaultShader, camera);
 		earth.RotateByAngle(0.01f, glm::vec3(0.0f, 0.5f, 0.5f));
 
-		moon.Draw(shaderProgram, camera);
+		moon.Draw(defaultShader, camera);
 		moon.RotateByAngle(0.01f, glm::vec3(0.0f, 0.5f, 0.5f));
 
-		mars.Draw(shaderProgram, camera);
+		mars.Draw(defaultShader, camera);
 		mars.RotateByAngle(0.01f, glm::vec3(0.0f, 0.5f, 0.5f));
 
-		jupiter.Draw(shaderProgram, camera);
+		jupiter.Draw(defaultShader, camera);
 		jupiter.RotateByAngle(0.1f, glm::vec3(0.0f, 0.5f, 0.5f));
 
-		saturn.Draw(shaderProgram, camera);
+		saturn.Draw(defaultShader, camera);
 		saturn.RotateByAngle(0.01f, glm::vec3(0.0f, 0.5f, 0.5f));
 
-		uranus.Draw(shaderProgram, camera);
+		uranus.Draw(defaultShader, camera);
 		uranus.RotateByAngle(0.01f, glm::vec3(0.0f, 0.5f, 0.5f));
 
-		venus.Draw(shaderProgram, camera);
+		venus.Draw(defaultShader, camera);
 		venus.RotateByAngle(0.01f, glm::vec3(0.0f, 0.5f, 0.5f));
 
-		neptune.Draw(shaderProgram, camera);
+		neptune.Draw(defaultShader, camera);
 		neptune.RotateByAngle(0.01f, glm::vec3(0.0f, 0.5f, 0.5f));
 
 		// Draw the skybox
@@ -373,7 +373,7 @@ int main()
 	ImGui::DestroyContext();
 
 	// Delete all the objects we've created
-	shaderProgram.Delete();
+	defaultShader.Delete();
 	skyboxShader.Delete();
 	sunShader.Delete();
 	// Delete window before ending the program

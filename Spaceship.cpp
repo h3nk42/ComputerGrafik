@@ -31,7 +31,6 @@ void Spaceship::executeMovement() {
 				velocity = 0;
 				flame->setSize(velocity);
 			}
-		
 		}
 		if (glm::distance(Position, SunPosition) < SunScale + 0.1f) {
 			velocity = 0;
@@ -51,7 +50,6 @@ void Spaceship::Inputs(GLFWwindow* window)
 	// apply debounce to velocity change
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
 	{
-		
 			crntVelocityChangedTime = glfwGetTime();
 			double timeDiff = crntVelocityChangedTime - prevVelocityChangedTime;
 			if (timeDiff > 0.2) {
@@ -61,8 +59,6 @@ void Spaceship::Inputs(GLFWwindow* window)
 				prevVelocityChangedTime = crntVelocityChangedTime;
 				flame->setSize(velocity);
 			}
-		
-			
 	}
 
 
@@ -126,10 +122,16 @@ void Spaceship::Inputs(GLFWwindow* window)
 
 
 		// Spaceship rotation
-		glm::vec3 rotationAxis = glm::normalize(glm::cross(OriginalOrientation, Orientation));
-		float angle = glm::orientedAngle(glm::normalize(OriginalOrientation), glm::normalize(Orientation), rotationAxis);
-
+		glm::vec3 rotationAxis = glm::normalize(glm::cross(
+			OriginalOrientation,
+			Orientation));
+		float angle = glm::orientedAngle(
+			glm::normalize(OriginalOrientation),
+			glm::normalize(Orientation),
+			rotationAxis);
 		model.setRotation(glm::angleAxis(angle, rotationAxis));
+
+
 		model.RotateByAngle(float(-90.0f), glm::vec3(1, 0, 0));
 		model.RotateByAngle(float(-90.0f), glm::vec3(0, 1, 0));
 		model.RotateByAngle(float(-5.0f), glm::vec3(0, 0, 1));
